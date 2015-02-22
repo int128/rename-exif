@@ -34,12 +34,14 @@ Dir.entries('.').select {|e|
     puts "# skipped #{filename}"
   end
 }.select {|e| e.is_a? Hash}.group_by {|rename| rename[:to]
-}.each {|k, renames|
+}.flat_map {|k, renames|
   if renames.one?
-    puts "mv -nv '#{renames.first[:from]}' '#{renames.first[:to]}#{FILE_EXT}'"
+    [{ :from => renames.first[:from], :to => "#{renames.first[:to]}#{FILE_EXT}" }]
   else
-    renames.each.with_index(1) {|rename ,index|
-      puts "mv -nv '#{rename[:from]}' '#{rename[:to]}-#{index}#{FILE_EXT}'"
+    renames.map.with_index(1) {|rename ,index|
+      { :from => renames.first[:from], :to => "#{rename[:to]}-#{index}#{FILE_EXT}" }
     }
   end
+}.select {|rename| rename[:from] != rename[:to] }.each {|rename|
+  puts "mv -nv '#{rename[:from]}' '#{rename[:to]}'"
 }
