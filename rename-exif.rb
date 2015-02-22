@@ -39,7 +39,7 @@ Dir.entries('.').select {|e|
     [{ :from => renames.first[:from], :to => "#{renames.first[:to]}#{FILE_EXT}" }]
   else
     renames.map.with_index(1) {|rename ,index|
-      { :from => renames.first[:from], :to => "#{rename[:to]}-#{index}#{FILE_EXT}" }
+      { :from => rename[:from], :to => "#{rename[:to]}-#{index}#{FILE_EXT}" }
     }
   end
 }.select {|rename| rename[:from] != rename[:to] }.each {|rename|
