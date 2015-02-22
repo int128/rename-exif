@@ -27,11 +27,13 @@ Dir.entries('.').select {|e|
 }.map {|filename|
   begin
     exif = JPEG.new(filename)
-    if exif.date_time
+    if exif.date_time.is_a? Time
       { :from => filename, :to => exif.date_time.strftime(FILE_DATE_TIME) }
+    else
+      puts "# skipped #{filename} (timestamp not found)"
     end
-  rescue MalformedJPEG
-    puts "# skipped #{filename}"
+  rescue MalformedJPEG => reason
+    puts "# skipped #{filename} (#{reason})"
   end
 }.select {|e| e.is_a? Hash}.group_by {|rename| rename[:to]
 }.flat_map {|k, renames|
