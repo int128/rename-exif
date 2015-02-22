@@ -36,10 +36,10 @@ Dir.entries('.').select {|e|
 }.select {|e| e.is_a? Hash}.group_by {|rename| rename[:to]
 }.each {|k, renames|
   if renames.one?
-    puts "mv -nv #{renames.first[:from]} #{renames.first[:to]}#{FILE_EXT}"
+    puts "mv -nv '#{renames.first[:from]}' '#{renames.first[:to]}#{FILE_EXT}'"
   else
     renames.each.with_index(1) {|rename ,index|
-      puts "mv -nv #{rename[:from]} #{rename[:to]}-#{index}#{FILE_EXT}"
+      puts "mv -nv '#{rename[:from]}' '#{rename[:to]}-#{index}#{FILE_EXT}'"
     }
   end
 }
